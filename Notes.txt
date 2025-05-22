@@ -1,0 +1,15 @@
+Virtual Environment 
+
+--- Manage all your application dependencies
+--- Flask , Flask-sqlalchemy
+
+Flask application has a templates folder in which all the html
+pages are stored and served when needed
+
+
+Model 
+
+Songs
+
+id --- Primary key
+song_name 

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    Hello {{ Dashusername }}!
+    Welcome to your personalized dashboard.
+    #[<Album 1>]
+    <h3> Albums </h3>
+    {% for album in jinjaalbums %}
+        {{album.album_name}}-----<a href="/edit_album/{{album.a_id}}">Edit Album</a><br>
+        <br>
+    {% endfor %}
+
+
+    <a href="/add_album">Add an Album</a>
+    <hr>
+</body>
+</html>

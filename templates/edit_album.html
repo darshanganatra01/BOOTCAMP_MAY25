@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                                    <span class="{{category}}">      {{ message }} , {{category}}     </span>
+                                 <br>
+                        {% endfor %}
+                    {% endif %}
+                    {%endwith%}
+    <form method="POST" action="/edit_album/{{jinjaalbumid}}">
+    
+        <h1>Edit an Album</h1>
+
+        Album name : <input type="text" name="album_name" placeholder="{{jinjaalbumname}}">
+        <br>
+        <br>
+        <input type="submit">
+    </form>
+</body>
+</html>
