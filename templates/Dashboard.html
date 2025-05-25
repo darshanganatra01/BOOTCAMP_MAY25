@@ -11,11 +11,23 @@
     #[<Album 1>]
     <h3> Albums </h3>
     {% for album in jinjaalbums %}
-        {{album.album_name}}-----<a href="/edit_album/{{album.a_id}}">Edit Album</a><br>
+        {{album.album_name}}-----<a href="/edit_album/{{album.a_id}}">Edit Album</a>|
+        <a href="/delete_album/{{album.a_id}}">Delete Album</a>|
+
+
+
+        <a href="/add_song/{{album.a_id}}">Add a song to this album</a><br>
         <br>
+        <br>
+    
     {% endfor %}
-
-
+    <hr>
+    <h3> Songs </h3>
+    {% for song in jinjasongs %}
+        {{song.song_name}}-----{{song.singer_name}}-----{{song.album.album_name}}  <br>
+    {% endfor %}
+    <br>
+    <hr>
     <a href="/add_album">Add an Album</a>
     <hr>
 </body>

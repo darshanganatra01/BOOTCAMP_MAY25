@@ -13,3 +13,23 @@ Songs
 
 id --- Primary key
 song_name 
+
+
+
+Flask-Migrate
+
+For changing the database
+pip install flask-Migrate
+migrate = Migrate(app,db)
+
+upper 3 lines in the code 
+
+
+
+flask db init 
+one time line to initialize the migration folder
+
+
+each time in terminal
+flask db migrate -m "Some changes that i did"
+flask db upgrade

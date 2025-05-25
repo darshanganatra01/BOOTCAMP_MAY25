@@ -1,5 +1,8 @@
 from flask import Flask,render_template,request,redirect,session,flash
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+
 
 #installing
 #importing 
@@ -16,6 +19,8 @@ app.config['SECRET_KEY']='saltnpepper'
 db = SQLAlchemy()  #initialization
 
 db.init_app(app)  #integrating
+
+migrate =Migrate(app,db)
 
 app.app_context().push()
 
@@ -38,10 +43,16 @@ class Song(db.Model):
     __tablename__ = 'songs'
     s_id = db.Column(db.Integer, primary_key=True ,autoincrement=True)
     song_name = db.Column(db.String(80), unique=True, nullable=False)
+    singer_name = db.Column(db.String(80), nullable=False)
     album_id = db.Column(db.Integer, db.ForeignKey(Album.a_id), nullable=False)
     album = db.relationship(Album,backref='songs',lazy=True)
 
-
+class Playlist(db.Model):
+    __tablename__ = 'playlists'
+    p_id = db.Column(db.Integer, primary_key=True ,autoincrement=True)
+    playlist_name = db.Column(db.String(80), unique=True, nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey(User.id), nullable=False)
+    user = db.relationship(User,backref='playlists',lazy=True)
 
 db.create_all()  #creating the database
 
@@ -104,7 +115,18 @@ def signup():
 def dashboard():
     user=session['username']
     albums = Album.query.all()
-    return render_template('Dashboard.html',Dashusername=user,jinjaalbums=albums)
+
+    print(albums[0])
+    print(albums[0].album_name)
+    print(albums[0].songs)
+    
+
+    songs=Song.query.all()
+
+    #<Song 1> ------> <Album 1>
+    #<Album 1> ------> <Song 1>
+
+    return render_template('Dashboard.html',Dashusername=user,jinjaalbums=albums,jinjasongs=songs)
 
 @app.route('/add_album',methods=['GET','POST'])
 def add_album():
@@ -146,6 +168,41 @@ def edit_album(albumid):
             db.session.commit()
             print("Album edited successfully")
             return redirect('/dashboard')
+        
+
+@app.route('/add_song/<albumid>',methods=['GET','POST'])
+def add_song(albumid):
+    if request.method=="GET":
+        return render_template('add_song.html',jinjaalbumid=albumid)
+    else:
+        formsong_name=request.form.get('song_name')
+        formsinger_name=request.form.get('singer_name')
+
+        if_song_exists = Song.query.filter_by(song_name=formsong_name).first()
+        if if_song_exists:
+            print("Song already exists")
+            flash("Song already exists","error")
+            return redirect('/add_song/'+albumid)
+        else:
+            new_song = Song(song_name=formsong_name,singer_name=formsinger_name,album_id=albumid)
+            db.session.add(new_song)
+            db.session.commit()
+            print("Song added successfully")
+            return redirect('/dashboard')
+        
+
+
+@app.route('/delete_album/<albumid>')
+def delete_album(albumid):
+    album_to_delete = Album.query.filter_by(a_id=albumid).first()
+    if album_to_delete:
+        db.session.delete(album_to_delete)
+        db.session.commit()
+        print("Album deleted successfully")
+    else:
+        print("Album not found")
+    return redirect('/dashboard')
+
 
 
         
